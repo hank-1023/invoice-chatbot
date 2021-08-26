@@ -139,7 +139,7 @@ const App = () => {
   const handleEnd = ({ steps, values }) => {
     const [receiverName, receiverCompany, receiverEmail, description, amount] = values;
     const url = `https://staging-3.creators.lumanu.com/invoice/create?email=${receiverEmail}&to_name=${receiverName}&company=${receiverCompany}&item=${description}&amount_total=${amount}`;
-    window.open(url, '_blank').focus();
+    window.open(url, '_blank');
   }
 
   return (
