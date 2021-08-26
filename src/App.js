@@ -4,7 +4,6 @@ import ChatBot from "react-simple-chatbot";
 import "./App.css";
 
 const theme = {
-  //background: "#000",
   fontFamily: "Inter",
   headerBgColor: "#000",
   headerFontColor: "#fff",
@@ -15,7 +14,7 @@ const theme = {
   userFontColor: "#4a4a4a",
 };
 
-const Review = ({steps}) => {
+const Review = ({ steps }) => {
   const [receiverName, setReceiverName] = useState('');
   const [receiverCompany, setReceiverCompany] = useState('');
   const [receiverEmail, setReceiverEmail] = useState('');
@@ -23,7 +22,7 @@ const Review = ({steps}) => {
   const [amount, setAmount] = useState('');
 
   useEffect(() => {
-    const {receiverName, receiverCompany, receiverEmail, description, amount} = steps;
+    const { receiverName, receiverCompany, receiverEmail, description, amount } = steps;
 
 
     setReceiverName(receiverName);
@@ -35,32 +34,32 @@ const Review = ({steps}) => {
 
   return (
     <div style={{ width: '100%' }}>
-        <h3>Summary</h3>
-        <table>
-          <tbody>
-            <tr>
-              <td>Name</td>
-              <td>{receiverName.value}</td>
-            </tr>
-            <tr>
-              <td>Company</td>
-              <td>{receiverCompany.value}</td>
-            </tr>
-            <tr>
-              <td>Email</td>
-              <td>{receiverEmail.value}</td>
-            </tr>
-            <tr>
-              <td>Description</td>
-              <td>{description.value}</td>
-            </tr>
-            <tr>
-              <td>Amount</td>
-              <td>{amount.value}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <h3>Summary</h3>
+      <table>
+        <tbody>
+          <tr>
+            <td>Name</td>
+            <td>{receiverName.value}</td>
+          </tr>
+          <tr>
+            <td>Company</td>
+            <td>{receiverCompany.value}</td>
+          </tr>
+          <tr>
+            <td>Email</td>
+            <td>{receiverEmail.value}</td>
+          </tr>
+          <tr>
+            <td>Description</td>
+            <td>{description.value}</td>
+          </tr>
+          <tr>
+            <td>Amount</td>
+            <td>{amount.value}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   );
 };
 
@@ -157,20 +156,28 @@ const App = () => {
       message: 'Redirecting you to Lumanu',
       end: true
     }
-  ]
+  ];
 
   const handleEnd = ({ steps, values }) => {
     // eslint-disable-next-line no-unused-vars
     const [_, receiverName, receiverEmail, receiverCompany, description, amount] = values;
     const url = `https://staging-3.creators.lumanu.com/invoice/create?email=${receiverEmail}&to_name=${receiverName}&company=${receiverCompany}&item=${description}&amount_total=${amount}`;
     window.open(url, '_blank');
-  }
+  };
 
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
-         <ChatBot
+        <ChatBot
+          className="chat-app"
+          headerTitle="Luna"
           width="100vw"
+          style={{
+            height: "100vh"
+          }}
+          contentStyle={{
+            height: "calc(100vh - 112px)"
+          }}
           recognitionEnable={true}
           handleEnd={handleEnd}
           steps={steps} />
