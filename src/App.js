@@ -5,7 +5,7 @@ import "./App.css";
 
 const theme = {
   //background: "#000",
-  fontFamily: "Moret",
+  fontFamily: "Inter",
   headerBgColor: "#000",
   headerFontColor: "#fff",
   headerFontSize: "18px",
@@ -68,26 +68,29 @@ const App = () => {
   const steps = [
     {
       id: '0',
-      message: 'Welcome to Lumanu Invoice Sender!',
+      message: 'Hey there, I am Luna!',
       trigger: '1',
     },
     {
       id: '1',
-      message: 'Who are you sending invoice to?',
+      message: 'How can I help you today?',
+      trigger: 'help_options',
+    },
+    {
+      id: 'help_options',
+      options: [
+        { value: 'send_invoice', label: 'Send an invoice', trigger: '2' },
+        { value: 'get_status', label: 'Get status for invoice', trigger: '2' },
+        { value: 'call_tony', label: 'Call Tony', trigger: '2' },
+      ],
+    },
+    {
+      id: '2',
+      message: "Who would you like to send the invoice to?",
       trigger: 'receiverName',
     },
     {
       id: 'receiverName',
-      user: true,
-      trigger: "2",
-    },
-    {
-      id: '2',
-      message: "What is the name of the company?",
-      trigger: 'receiverCompany',
-    },
-    {
-      id: 'receiverCompany',
       user: true,
       trigger: "3",
     },
@@ -103,17 +106,27 @@ const App = () => {
     },
     {
       id: '4',
-      message: "What's the description of the item?",
-      trigger: 'description',
+      message: "What is the name of the company?",
+      trigger: 'receiverCompany',
     },
     {
-      id: 'description',
+      id: 'receiverCompany',
       user: true,
       trigger: "5",
     },
     {
       id: '5',
-      message: "How much do you want to charge for?",
+      message: "What are you invoicing for?",
+      trigger: 'description',
+    },
+    {
+      id: 'description',
+      user: true,
+      trigger: "6",
+    },
+    {
+      id: '6',
+      message: "How much do you want to charge?",
       trigger: 'amount',
     },
     {
@@ -129,7 +142,7 @@ const App = () => {
     },
     {
       id: 'confirm',
-      message: 'Does it all looks correct?',
+      message: 'Does it all look correct?',
       trigger: 'confirm_options',
     },
     {
@@ -147,7 +160,7 @@ const App = () => {
   ]
 
   const handleEnd = ({ steps, values }) => {
-    const [receiverName, receiverCompany, receiverEmail, description, amount] = values;
+    const [_, receiverName, receiverEmail, receiverCompany, description, amount] = values;
     const url = `https://staging-3.creators.lumanu.com/invoice/create?email=${receiverEmail}&to_name=${receiverName}&company=${receiverCompany}&item=${description}&amount_total=${amount}`;
     window.open(url, '_blank');
   }
@@ -155,7 +168,9 @@ const App = () => {
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
-         <ChatBot 
+         <ChatBot
+          width="100vw"
+          recognitionEnable={true}
           handleEnd={handleEnd}
           steps={steps} />
       </ThemeProvider>
