@@ -1,6 +1,19 @@
-import { useEffect, useState } from 'react';
-import ChatBot from 'react-simple-chatbot';
-import './App.css';
+import { useEffect, useState } from "react";
+import { ThemeProvider } from "styled-components";
+import ChatBot from "react-simple-chatbot";
+import "./App.css";
+
+const theme = {
+  //background: "#000",
+  fontFamily: "Moret",
+  headerBgColor: "#000",
+  headerFontColor: "#fff",
+  headerFontSize: "18px",
+  botBubbleColor: "#B9FA3D",
+  botFontColor: "#000",
+  userBubbleColor: "#fff",
+  userFontColor: "#4a4a4a",
+};
 
 const Review = ({steps}) => {
   const [receiverName, setReceiverName] = useState('');
@@ -11,6 +24,7 @@ const Review = ({steps}) => {
 
   useEffect(() => {
     const {receiverName, receiverCompany, receiverEmail, description, amount} = steps;
+
 
     setReceiverName(receiverName);
     setReceiverCompany(receiverCompany);
@@ -50,11 +64,7 @@ const Review = ({steps}) => {
   );
 };
 
-
-
-
 const App = () => {
-
   const steps = [
     {
       id: '0',
@@ -144,11 +154,13 @@ const App = () => {
 
   return (
     <div className="App">
-      <ChatBot 
-      handleEnd={handleEnd}
-      steps={steps} />
+      <ThemeProvider theme={theme}>
+         <ChatBot 
+          handleEnd={handleEnd}
+          steps={steps} />
+      </ThemeProvider>
     </div>
   );
-}
+};
 
 export default App;
