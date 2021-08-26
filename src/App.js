@@ -3,16 +3,20 @@ import ChatBot from 'react-simple-chatbot';
 import './App.css';
 
 const Review = ({steps}) => {
-  const [senderName, setName] = useState('');
   const [receiverName, setReceiverName] = useState('');
+  const [receiverCompany, setReceiverCompany] = useState('');
   const [receiverEmail, setReceiverEmail] = useState('');
+  const [description, setDescription] = useState('');
+  const [amount, setAmount] = useState('');
 
   useEffect(() => {
-    const {senderName, receiverName, receiverEmail} = steps;
+    const {receiverName, receiverCompany, receiverEmail, description, amount} = steps;
 
-    setName(senderName);
     setReceiverName(receiverName);
+    setReceiverCompany(receiverCompany);
     setReceiverEmail(receiverEmail);
+    setDescription(description);
+    setAmount(amount);
   }, [steps]);
 
   return (
@@ -21,16 +25,24 @@ const Review = ({steps}) => {
         <table>
           <tbody>
             <tr>
-              <td>From</td>
-              <td>{senderName.value}</td>
+              <td>Name</td>
+              <td>{receiverName.value}</td>
             </tr>
             <tr>
-              <td>To</td>
-              <td>{receiverName.value}</td>
+              <td>Company</td>
+              <td>{receiverCompany.value}</td>
             </tr>
             <tr>
               <td>Email</td>
               <td>{receiverEmail.value}</td>
+            </tr>
+            <tr>
+              <td>Description</td>
+              <td>{description.value}</td>
+            </tr>
+            <tr>
+              <td>Amount</td>
+              <td>{amount.value}</td>
             </tr>
           </tbody>
         </table>
@@ -38,54 +50,103 @@ const Review = ({steps}) => {
   );
 };
 
-const steps = [
-  {
-    id: '0',
-    message: 'Welcome to Lumanu Invoice Sender!',
-    trigger: '1',
-  },
-  {
-    id: '1',
-    message: 'May I know your name please?',
-    trigger: 'senderName',
-  },
-  {
-    id: 'senderName',
-    user: true,
-    trigger: "2",
-  },
-  {
-    id: '2',
-    message: 'Hi {previousValue}! Who are you sending invoice to?',
-    trigger: 'receiverName',
-  },
-  {
-    id: 'receiverName',
-    user: true,
-    trigger: "3",
-  },
-  {
-    id: '3',
-    message: "Got it! What's the email of the receiver",
-    trigger: 'receiverEmail',
-  },
-  {
-    id: 'receiverEmail',
-    user: true,
-    trigger: "review",
-  },
-  {
-    id: 'review',
-    component: <Review />,
-    asMessage: true,
-    end: true,
-  },
-]
+
+
 
 const App = () => {
+
+  const steps = [
+    {
+      id: '0',
+      message: 'Welcome to Lumanu Invoice Sender!',
+      trigger: '1',
+    },
+    {
+      id: '1',
+      message: 'Who are you sending invoice to?',
+      trigger: 'receiverName',
+    },
+    {
+      id: 'receiverName',
+      user: true,
+      trigger: "2",
+    },
+    {
+      id: '2',
+      message: "What is the name of the company?",
+      trigger: 'receiverCompany',
+    },
+    {
+      id: 'receiverCompany',
+      user: true,
+      trigger: "3",
+    },
+    {
+      id: '3',
+      message: "Got it! What's their email?",
+      trigger: 'receiverEmail',
+    },
+    {
+      id: 'receiverEmail',
+      user: true,
+      trigger: "4",
+    },
+    {
+      id: '4',
+      message: "What's the description of the item?",
+      trigger: 'description',
+    },
+    {
+      id: 'description',
+      user: true,
+      trigger: "5",
+    },
+    {
+      id: '5',
+      message: "How much do you want to charge for?",
+      trigger: 'amount',
+    },
+    {
+      id: 'amount',
+      user: true,
+      trigger: 'review',
+    },
+    {
+      id: 'review',
+      component: <Review />,
+      asMessage: true,
+      trigger: 'confirm',
+    },
+    {
+      id: 'confirm',
+      message: 'Does it all looks correct?',
+      trigger: 'confirm_options',
+    },
+    {
+      id: 'confirm_options',
+      options: [
+        { value: 'yes', label: 'Yes', trigger: 'redirect' },
+        { value: 'no', label: 'No', trigger: 'redirect' },
+      ],
+    },
+    {
+      id: 'redirect',
+      message: 'Redirecting you to Lumanu',
+      end: true
+    }
+  ]
+
+  const handleEnd = ({ steps, values }) => {
+    const [receiverName, receiverCompany, receiverEmail, description, amount] = values;
+    const url = `https://staging-3.creators.lumanu.com/invoice/create?email=${receiverEmail}&to_name=${receiverName}&company=${receiverCompany}&item=${description}&amount_total=${amount}`;
+    window.open(url, '_blank').focus();
+  }
+
   return (
     <div className="App">
-      <ChatBot steps={steps} />
+      <ChatBot 
+      handleEnd={handleEnd}
+      steps={steps} />
     </div>
   );
 }
